@@ -15,4 +15,5 @@ private:
     int startState;
     std::set<int> endStates;
     std::function<int(int, char)> transition;
+    std::string buffer;
 };
