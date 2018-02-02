@@ -1,6 +1,6 @@
 #include "lexer/token.hpp"
 
-Token::Token(std::string value, TokenType type, int row, int col) : value(value), type(type), row(row), col(col) {}
+Token::Token(std::string value, TokenType type, int line, int col) : value(value), type(type), line(line), col(col) {}
 
 std::string Token::getValue() {
     return value;
@@ -10,8 +10,8 @@ TokenType Token::getType() {
     return type;
 }
 
-int Token::getRow() {
-    return row;
+int Token::getLine() {
+    return line;
 }
 
 int Token::getCol() {
