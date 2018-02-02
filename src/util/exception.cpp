@@ -1,6 +1,6 @@
 #include <string>
 
-#include "utils/exception.hpp"
+#include "util/exception.hpp"
 
 UnrecognizedToken::UnrecognizedToken(int line, int col, char symbol) : line(line), col(col), symbol(symbol) {}
 

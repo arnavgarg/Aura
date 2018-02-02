@@ -1,7 +1,8 @@
 #include "lexer/lexer.hpp"
 #include "lexer/fsm/fsm.hpp"
-#include "utils/charutil.hpp"
-#include "utils/exception.hpp"
+#include "util/charutil.hpp"
+#include "util/exception.hpp"
+#include <cstdio>
 
 Lexer::Lexer() : pos(0), line(0), col(0) {}
 
