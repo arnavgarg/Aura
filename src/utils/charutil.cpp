@@ -1,3 +1,5 @@
+#include <string>
+
 #include "utils/charutil.hpp"
 
 bool CharUtil::isAlhpa(char c) {
@@ -9,7 +11,8 @@ bool CharUtil::isDigit(char c) {
 }
 
 bool CharUtil::isWhiteSpace(char c) {
-    return "\t\r\f\v\u00A0\u2028\u2029".contains(c);
+    std::string str("\t\r\f\v\u00A0\u2028\u2029");
+    return str.find(c) != std::string::npos;
 }
 
 bool CharUtil::isDelimiter(char c) {
