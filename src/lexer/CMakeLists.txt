@@ -1,6 +1,7 @@
 #
 # CMakeLists for Aura Interpreter
 #
+project(Aura)
 set(lexer_src
     lexer.cpp
     token.cpp
