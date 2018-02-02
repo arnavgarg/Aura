@@ -1,6 +1,6 @@
 #include <string>
 
-#include "utils/charutil.hpp"
+#include "util/charutil.hpp"
 
 bool CharUtil::isAlhpa(char c) {
     return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');
