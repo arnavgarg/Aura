@@ -12,6 +12,7 @@ public:
     TokenType getType();
     int getLine();
     int getCol();
+    std::string toString();
 
 private:
     std::string value;
