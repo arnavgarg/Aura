@@ -19,6 +19,7 @@ private:
     Token getNext();
     Token recognizeOperator();
     Token recognizeNumber();
+    Token recognizeString();
 };
 
 #endif
