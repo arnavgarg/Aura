@@ -28,7 +28,13 @@ enum TokenType {
     // assignment operator
     Assign,
 
-    // types
+    // type declarations
+    IntDec,
+    DoubDec,
+    BoolDec,
+    StrDec,
+
+    // type values
     Int,
     Double,
     Bool,
@@ -47,6 +53,7 @@ enum TokenType {
 
     // misc
     Space,
+    Identifier,
     EndOfInput,
     Unrecognized
 };
@@ -56,7 +63,7 @@ const char* const typeStrings[] = {
     "If",
     "Else",
     "For",
-    "While,"
+    "While",
     "Null",
     "Func",
     "Return",
@@ -78,7 +85,13 @@ const char* const typeStrings[] = {
     // assignment operator
     "Assign",
 
-    // types
+    // type declarations
+    "IntDec",
+    "DoubDec",
+    "BoolDec",
+    "StrDec",
+
+    // type values
     "Int",
     "Double",
     "Bool",
@@ -97,6 +110,7 @@ const char* const typeStrings[] = {
 
     // misc
     "Space",
+    "Identifier",
     "EndOfInput",
     "Unrecognized"
 };
