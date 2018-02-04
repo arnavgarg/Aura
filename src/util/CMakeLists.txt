@@ -8,5 +8,5 @@ set(util_src
 )
 
 set(EXECUTABLE_OUTPUT_PATH ../..)
-add_executable(aura ${util_src})
-target_link_libraries(aura lexer)
+add_library(util ${util_src})
+target_link_libraries(util lexer)

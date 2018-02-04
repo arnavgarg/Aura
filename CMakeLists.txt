@@ -10,3 +10,10 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 include_directories(include)
 add_subdirectory(src)
+
+set (run_src
+    src/run.cpp
+)
+
+add_executable(aura ${run_src})
+target_link_libraries(aura util)
