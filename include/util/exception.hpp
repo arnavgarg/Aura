@@ -1,11 +1,16 @@
 #include <exception>
 
-class UnrecognizedToken : public std::exception {
+class UnrecognizedTokenException : public std::exception {
 public:
-    UnrecognizedToken(int line, int col, char symbol);
+    UnrecognizedTokenException(int line, int col, char symbol);
     const char* what() const throw();
 private:
     int line;
     int col;
     char symbol;
+};
+
+class UnclosedStringException : public std::exception {
+public:
+    const char* what() const throw();
 };
