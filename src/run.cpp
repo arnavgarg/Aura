@@ -26,9 +26,10 @@ int main(int argc, char* argv[]) {
             std::cout << "Error: Invalid File\nAll files must have .aura extension" << std::endl;
             return 1;
         }
+        std::string outfile = filename.substr(0, filename.length()-5) + ".aout";
 
         std::ifstream fin(filename);
-        std::ofstream fout(filename.substr(0, filename.length()-5) + ".aout");
+        std::ofstream fout(outfile);
         std::stringstream buffer;
         buffer << fin.rdbuf();
 
@@ -36,6 +37,7 @@ int main(int argc, char* argv[]) {
         for (Token token : tokens) {
             fout << token.toString() << std::endl;
         }
+        std::cout << "tokenized output can be found in " <<  outfile << std::endl;
     } else {
         std::cout << "ERROR: Usage\n";
         std::cout << "./aura\n";
