@@ -1,4 +1,5 @@
 #include <iostream>
+#include <map>
 
 #include "lexer/lexer.hpp"
 #include "lexer/fsm/fsm.hpp"
@@ -7,34 +8,28 @@
 
 Lexer::Lexer() : pos(0), line(1), col(0) {}
 
-int main() {
-    Lexer lex;
-    std::vector<Token> tokens = lex.tokenize("512.5 >= 32 * 098 \"test k\" \"hello\"\n\"Wow the code works!\"");
-    for (Token token : tokens) {
-        std::cout << token.toString() << std::endl;
-    }
-}
-
 std::vector<Token> Lexer::tokenize(std::string input) {
+    pos = 0; line = 1; col = 0;
     this->input = input;
     std::vector<Token> tokens;
 
     Token token = getNext();
     while (token.getType() != EndOfInput) {
         if (token.getType() == Unrecognized) {
-            printf("%s\n", token.getValue().c_str());
-            throw UnrecognizedToken(token.getLine(), token.getCol(), token.getValue()[0]);
+            throw UnrecognizedTokenException(token.getLine(), token.getCol(), token.getValue()[0]);
         }
+
         tokens.push_back(token);
         token = getNext();
     }
+    tokens.push_back(token);
 
     return tokens;
 }
 
 Token Lexer::getNext() {
     if (pos >= input.size()) {
-        return Token("", EndOfInput, line, col);
+        return Token("EOI", EndOfInput, line, col);
     }
 
     if (CharUtils::isOperator(input[pos])) {
@@ -51,15 +46,23 @@ Token Lexer::getNext() {
 
     if (CharUtils::isSpace(input[pos])) {
         pos++; col++;
-        return Token(" ", Space, pos-1, col-1);
+        return Token(" ", Space, line, col-1);
     }
 
     if (CharUtils::isEndline(input[pos])) {
-        pos++; col++;
-        return Token("\\n", Endline, pos-1, col-1);
+        int oldcol = col;
+        pos++; col = 0; line++;
+        return Token("\\n", Endline, line-1, oldcol);
     }
 
-    printf("%s\n", &input[pos]);
+    if (CharUtils::isAlhpa(input[pos])) {
+        return recognizeLiteral();
+    }
+
+    if (CharUtils::isDelimiter(input[pos])) {
+        return recognizeDelimter();
+    }
+
     return Token(std::to_string(input[pos]), Unrecognized, line, col);
 }
 
@@ -100,33 +103,26 @@ Token Lexer::recognizeOperator() {
         case '=':
             if (lookahead != '=') {
                 pos++; col++;
-                return Token("=", Equal, line, col-1);
+                return Token("=", Assign, line, col-1);
             } else {
                 pos += 2; col += 2;
-                return Token("==", Assign, line, col-2);
+                return Token("==", Equal, line, col-2);
             }
     }
     return Token(std::to_string(input[pos]), Unrecognized, line, col);
 }
-// TODO Simplify to 2 states
+
 Token Lexer::recognizeNumber() {
-    FSM fsm(std::set<int>{1,2,3}, 1, std::set<int> {2,3}, [](int state, char symbol) -> int {
+    FSM fsm(std::set<int>{1,2}, 1, std::set<int> {1,2}, [](int state, char symbol) -> int {
         switch(state) {
             case 1:
                 if (CharUtils::isDigit(symbol)) {
-                    return 2;
+                    return 1;
                 } else if (symbol == '.') {
-                    return 3;
+                    return 2;
                 }
                 return FSM::INVALID_FSM_STATE;
             case 2:
-                if (CharUtils::isDigit(symbol)) {
-                    return 2;
-                } else if (symbol == '.') {
-                    return 3;
-                }
-                return FSM::INVALID_FSM_STATE;
-            case 3:
                 if (CharUtils::isDigit(symbol)) {
                     return 2;
                 }
@@ -157,12 +153,68 @@ Token Lexer::recognizeString() {
         if (CharUtils::isEndline(input[pos])) {
             line++;
         }
-        if (pos >= input.size()) {
-            // TODO throw exception
+        if (pos >= input.size() && input[pos-1] != '"') {
+            throw UnclosedStringException();
         }
     }
     buffer += input[pos];
     pos++; col++;
 
     return Token(buffer, String, line, col);
+}
+
+Token Lexer::recognizeLiteral() {
+    std::string buffer = input.substr(pos, 1);
+    pos++; col++;
+    while(pos <= input.length() && CharUtils::isAlhpa(input[pos])) {
+        buffer += input[pos];
+        pos++; col++;
+    }
+
+    std::map<std::string, TokenType> keywords {
+        { "if", If },
+        { "else", Else},
+        { "for", For },
+        { "while", While },
+        { "null", Null },
+        { "func", Func },
+        { "return", Return},
+        { "true", Bool },
+        { "false", Bool },
+        { "int", IntDec },
+        { "double", DoubDec },
+        { "bool", BoolDec },
+        { "string", StrDec }
+    };
+    auto check = keywords.find(buffer);
+    if (check != keywords.end()) {
+        return Token(buffer, check->second, line, col-buffer.length());
+    } else {
+        return Token(buffer, Identifier, line, col-buffer.length());
+    }
+}
+
+Token Lexer::recognizeDelimter() {
+    pos++; col++;
+    switch(input[pos-1]) {
+        case ':':
+            return Token(":", Colon, line, col-1);
+        case '(':
+            return Token("(", LeftParen, line, col-1);
+        case ')':
+            return Token(")", RightParen, line, col-1);
+        case '{':
+            return Token("{", LeftBrace, line, col-1);
+        case '}':
+            return Token("}", RightBrace, line, col-1);
+        case '[':
+            return Token("[", LeftBlock, line, col-1);
+        case ']':
+            return Token("]", RightBlock, line, col-1);
+        case ';':
+            return Token(";", Semicolon, line, col-1);
+        case '\n':
+            return Token("\\n", Endline, line, col-1);
+    }
+    return Token(std::string(&input[pos-1]), Unrecognized, line, col-1);
 }
