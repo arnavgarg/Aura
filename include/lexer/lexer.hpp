@@ -20,6 +20,8 @@ private:
     Token recognizeOperator();
     Token recognizeNumber();
     Token recognizeString();
+    Token recognizeLiteral();
+    Token recognizeDelimter();
 };
 
 #endif
