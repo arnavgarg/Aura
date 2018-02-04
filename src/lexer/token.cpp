@@ -17,7 +17,7 @@ int Token::getLine() {
 int Token::getCol() {
     return col;
 }
-
+#include <iostream>
 std::string Token::toString() {
-    return "<" + value + ", " + std::string(typeStrings[type-1]) + ", " + std::to_string(line) + ", " + std::to_string(col) + ">";
+    return "< " + value + ", " + std::string(typeStrings[type]) + ", " + std::to_string(line) + ", " + std::to_string(col) + " >";
 }
