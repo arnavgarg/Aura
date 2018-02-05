@@ -1,3 +1,6 @@
+/*
+ * utils used to recognize char type
+ */
 class CharUtils {
 public:
     static bool isAlhpa(char c);

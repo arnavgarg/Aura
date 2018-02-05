@@ -8,6 +8,9 @@
 
 Lexer::Lexer() : pos(0), line(1), col(0) {}
 
+/*
+ * splits the input string into a vector of tokens
+ */
 std::vector<Token> Lexer::tokenize(std::string input) {
     pos = 0; line = 1; col = 0;
     this->input = input;
@@ -22,6 +25,7 @@ std::vector<Token> Lexer::tokenize(std::string input) {
         tokens.push_back(token);
         token = getNext();
     }
+    // push back EOI token
     tokens.push_back(token);
 
     return tokens;
@@ -67,6 +71,7 @@ Token Lexer::getNext() {
 }
 
 Token Lexer::recognizeOperator() {
+    // used to check if operator has 2 chars
     char lookahead = pos + 1 < input.size() ? input[pos + 1] : '\0';
     switch (input[pos]) {
         case '+':
@@ -115,14 +120,14 @@ Token Lexer::recognizeOperator() {
 Token Lexer::recognizeNumber() {
     FSM fsm(std::set<int>{1,2}, 1, std::set<int> {1,2}, [](int state, char symbol) -> int {
         switch(state) {
-            case 1:
+            case 1: // before decimal point is found
                 if (CharUtils::isDigit(symbol)) {
                     return 1;
                 } else if (symbol == '.') {
                     return 2;
                 }
                 return FSM::INVALID_FSM_STATE;
-            case 2:
+            case 2: // after decimal point is found
                 if (CharUtils::isDigit(symbol)) {
                     return 2;
                 }
@@ -131,6 +136,7 @@ Token Lexer::recognizeNumber() {
         return FSM::INVALID_FSM_STATE;
     });
     std::tuple<bool, std::string> result = fsm.run(input.substr(pos));
+    // checks to see if decimal
     TokenType type = std::get<1>(result).find(".") != std::string::npos ? Double : Int;
 
     pos += std::get<1>(result).length();
@@ -144,7 +150,7 @@ Token Lexer::recognizeNumber() {
 }
 
 Token Lexer::recognizeString() {
-    std::string buffer = input.substr(pos, 1);
+    std::string buffer = input.substr(pos, 1); // gets "
     pos++; col++;
 
     while (input[pos] != '"') {
@@ -186,6 +192,8 @@ Token Lexer::recognizeLiteral() {
         { "bool", BoolDec },
         { "string", StrDec }
     };
+    // check to see if token is a keyword
+    // if it is, return token of that type
     auto check = keywords.find(buffer);
     if (check != keywords.end()) {
         return Token(buffer, check->second, line, col-buffer.length());

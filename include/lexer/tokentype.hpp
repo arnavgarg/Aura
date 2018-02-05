@@ -58,6 +58,9 @@ enum TokenType {
     Unrecognized
 };
 
+/*
+ * used as string reference for enum
+ */
 const char* const typeStrings[] = {
     // keywords
     "If",

@@ -2,6 +2,9 @@
 
 FSM::FSM(std::set<int> states, int startState, std::set<int> endStates, std::function<int(int, char)> transition) : states(states), startState(startState), endStates(endStates), transition(transition) {}
 
+/*
+ * keep calling transition until INVALID_FSM_STATE encountered
+ */
 std::tuple<bool, std::string> FSM::run(std::string input) {
     std::string buffer;
     int state = startState;

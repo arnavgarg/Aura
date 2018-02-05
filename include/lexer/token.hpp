@@ -5,6 +5,9 @@
 
 #include "lexer/tokentype.hpp"
 
+/*
+ * The token class holds the value, type, line#, and col# of a single token. 
+ */
 class Token {
 public:
     Token(std::string value, TokenType type, int line, int col);

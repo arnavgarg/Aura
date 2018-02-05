@@ -5,6 +5,9 @@
 
 #include "lexer/token.hpp"
 
+/*
+ * The lexer class is used to split a string into individual tokens. 
+ */
 class Lexer {
 public:
     Lexer();
