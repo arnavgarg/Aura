@@ -8,7 +8,7 @@ int main(int argc, char* argv[]) {
     Lexer lexer;
     if (argc == 1) {
         std::system("clear");
-        std::cout << "Aura Lexer 0.0.1 DEV BUILD" << std::endl;
+        std::cout << "Aura Interactive Lexer 0.0.1 DEV BUILD" << std::endl;
         while (true) {
             std::string input;
             std::cout << "> ";
