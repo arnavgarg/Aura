@@ -1,3 +1,6 @@
+#ifndef CHARUTIL_HPP
+#define CHARUTIL_HPP
+
 /*
  * utils used to recognize char type
  */
@@ -15,3 +18,5 @@ public:
     static bool isEndline(char c);
     static bool isSpace(char c);
 };
+
+#endif
