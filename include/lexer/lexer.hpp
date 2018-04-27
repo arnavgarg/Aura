@@ -6,12 +6,14 @@
 #include "lexer/token.hpp"
 
 /*
- * The lexer class is used to split a string into individual tokens. 
+ * The lexer class is used to split a string into individual tokens.
  */
 class Lexer {
 public:
     Lexer();
+    Lexer(std::string input);
     std::vector<Token> tokenize(std::string input);
+    Token getNext();
 
 private:
     std::string input;
@@ -19,7 +21,6 @@ private:
     int line;
     int col;
 
-    Token getNext();
     Token recognizeOperator();
     Token recognizeNumber();
     Token recognizeString();
