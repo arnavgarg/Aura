@@ -8,6 +8,8 @@
 
 Lexer::Lexer() : pos(0), line(1), col(0) {}
 
+Lexer::Lexer(std::string input) : input(input), pos(0), line(1), col(0) {}
+
 /*
  * splits the input string into a vector of tokens
  */
