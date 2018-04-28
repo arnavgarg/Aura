@@ -12,3 +12,7 @@ const char* UnrecognizedTokenException::what() const throw() {
 const char* UnclosedStringException::what() const throw() {
     return "Unclosed String Exception";
 }
+
+const char* InvalidTypeException::what() const throw() {
+    return "Invalid Type Exception";
+}

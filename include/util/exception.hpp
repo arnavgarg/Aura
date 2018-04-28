@@ -2,6 +2,7 @@
 #define EXCEPTION_HPP
 
 #include <exception>
+#include <string>
 
 /*
  * lexer found unrecognized token
@@ -20,6 +21,11 @@ private:
  * lexer started reading string but EOI reached before end of string
  */
 class UnclosedStringException : public std::exception {
+public:
+    const char* what() const throw();
+};
+
+class InvalidTypeException : public std::exception {
 public:
     const char* what() const throw();
 };
